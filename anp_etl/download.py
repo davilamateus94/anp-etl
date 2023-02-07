@@ -13,11 +13,15 @@ def get_tables_to_download():
 
 def download_raw_data(tables, i):
 
+    timeout = 60
     file = tables.iloc[i]
 
     url = file["path"]
+    logger.info(f"url:{url}")
     file_type = file["path"].split(".")[-1]
+    logger.info(f"file_type:{file_type}")
     file_name = file["name"]
+    logger.info(f"file_type:{file_name}")
 
     saved_files = [file.split("/")[-1] for file in glob.glob("data/bronze/*.csv")]
 
@@ -31,11 +35,11 @@ def download_raw_data(tables, i):
 
     if file_type == "csv":
 
-        wget.download(url, f"data/bronze/{file_name}")
+        wget.download(url, f"data/bronze/{file_name}", timeout=timeout)
 
     elif file_type == "zip":
 
-        wget.download(url, f"data/bronze/{file_name.split('.')[0]}.zip")
+        wget.download(url, f"data/bronze/{file_name.split('.')[0]}.zip", timeout=timeout)
 
         unziped_file_name = unzip_file(f"data/bronze/{file_name.split('.')[0]}.zip", "data/bronze/")
 
